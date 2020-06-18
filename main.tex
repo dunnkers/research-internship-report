@@ -1,0 +1,317 @@
+\documentclass{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%-----------------------PAGE SETTINGS----------------------------%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.01cm]{geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%--------------------------PREAMBLE------------------------------%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{anyfontsize}
+\usepackage{setspace}
+\usepackage{amsfonts}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{svg}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%-----------------------CUSTOM COMMANDS--------------------------%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\textBF}[1]{%
+    \pdfliteral direct {2 Tr 1 w} %the second factor is the boldness
+     #1%
+    \pdfliteral direct {0 Tr 0 w}%
+}
+
+\newcommand{\textDF}[1]{%
+    \pdfliteral direct {2 Tr 0.2 w} %the second factor is the boldness
+     #1%
+    \pdfliteral direct {0 Tr 0 w}%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%-----------------------DOCUMENT BEGIN---------------------------%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\title{
+\includegraphics[width=19cm]{Extras/rug_fse_cs_logo.pdf} \\
+\vspace{3cm}
+\begingroup
+\setstretch{4}\fontsize{38}{10}\selectfont\fontdimen2\font=0.8ex
+\parbox{13.3cm}{\textBF{Feature selection \\performance assessment}} %%Title
+\endgroup}
+\date{June 2020}
+% \author{Assessing supervised feature selection method performance for classification problems using conventional flat features.}
+\author{}
+\maketitle
+\vspace{-1.5cm}
+\hspace{4cm}\parbox[b][15cm][b]{8cm}{\textDF{\large\setstretch{1.5}
+MSc Research Internship INMSTAG-08\\
+% June 2020\\
+Student: J.G.S. Overschie\\ %NAME
+First supervisor: dr. G. Azzopardi\\
+Second assessor: A.M.J.A. Alsahaf}}
+\end{titlepage}
+\newpage
+\newgeometry{top=1in,bottom=1in,right=1.25in,left=1.25in} %Needed because margins were changed for titlepage
+
+\hrule
+\begin{abstract}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed laoreet volutpat metus et feugiat. Duis neque quam, eleifend a metus ac, rutrum mollis odio. Vestibulum pulvinar pellentesque nisi. Integer nec egestas eros, ut placerat lacus. Nulla volutpat consequat orci nec vestibulum. Nulla sed arcu diam. Suspendisse sem lectus, pellentesque nec elit ac, lacinia ultricies felis. Proin ut euismod nisi, id egestas orci. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean vulputate tempor tellus. Sed at quam ullamcorper, egestas metus a, vestibulum metus. Aliquam erat volutpat.
+...
+\end{abstract}
+\hrule
+\begin{quote}
+    
+\end{quote}
+\section{Introduction}
+% Feature selection has had a role, but is becoming ever more important
+Feature selection has since long played an important role in data mining and prediction tasks, where the removal of irrelevant or redundant features can decrease required storage space of a dataset without decreasing prediction performance. Even, in some cases prediction performance can increase, due to less noise in the input signal. In the current age and time, however, feature selection is becoming ever more relevant - there now exist cases where it becomes unfeasible to store and process all features of a dataset in its entirety; even though computational power and storage space increase, the improvements in hardware performance are now outpaced by the ever larger datasets available \citep{thomee2016yfcc100m}. Hence, there is need for reducing dataset dimensions.
+
+% Real life practical examples for large datasets
+Datasets have grown in both dimensions and amount of samples over the last couple decades (UCI repository growth \citep{alelyani2013feature}). Internet traffic increased, new and more accurate measuring devices came to market, and disk storage space became cheaper. Whilst in most areas both the amount of dimensions ($p$) and the amount of samples ($n$) increased, in some fields the amount of samples remains sparse relative to increasing dimensionality; bio-informatics, for example. Whilst the process of obtaining samples can still be intrusive, sensory devices got more accurate, causing more information to be available on a single sample. These datasets are of 'large $p$ - small $n$' shape ($p \gg n$), which are challenging to reduce dimensions for due to the small amounts of samples. These, and other dataset shapes can benefit from applying feature selection techniques. 
+
+% Now, what the paper is about; feature selection **performance assessment**; what previous papers did
+Existing literature on feature selection is extensive. Many methods exist, taking various approaches. What remains a common point of concern, however, is a consistent and reliable way to evaluate feature selection method performance. This need is expressed in several papers, e.g. 'a unifying theoretical framework is lacking' \citep{guyon2003introduction}. Most often, feature selection is applied to real-world datasets, after which the performance of a prediction task is assessed using labelled data. In this way, different feature selection methods would output different feature subsets which in turn would influence the validation predictor performance. The problem with this approach is that the evaluation becomes reliant on the choice of the validation predictor, as well as the fact that the 'correctness' of the chosen features is not taken into account. Commonly missing in papers is also an analysis on algorithm stability and a statistically sound argumentation for superiority. Therefore, a more controlled and more systematic way of arguing one method's performance over another is desired.
+
+% This paper's goal
+The goal of this paper is to provide an analysis on common ways of evaluating feature selection method performance, by discussing recent literature. With a better understanding of reasonable ways to argue for any given method, a distillation is then made to recommend a practical evaluation pipeline for feature selection methods.
+
+% 2 ways. + scope
+% TODO 3 contributions; theory, quantitative research, fseval. + scope
+This research contributes in two ways. First, ways of effective feature selection performance assessment are explored, in which different ways of assessing performance in literature are compared and a reasoning is provided as to what metrics are sensible to use in various cases. Second, a quantitative research using the proposed set of metrics is performed, comparing various promising supervised feature selection methods for classification problems. In the empirical part of this research, \textbf{scope} was reduced to focusing on supervised feature selection for classification problems using datasets that exhibit conventional flat features. However, the proposed feature selection evaluation pipeline should also be applicable to evaluating unsupervised setups too. Full terminology is available in Chapter~\ref{sec:reducing-dimensions}.
+
+% Table of contents
+The paper is built up in several theoretical chapters, followed by quantitative analysis results, a discussion and a conclusion. [...]
+
+\section{Reducing dimensions}\label{sec:reducing-dimensions}
+Among the subject of reducing dataset dimensions, there exist a common terminology that is used among the literature. Whilst some terminology is synonymous, other seemingly related terms mean different concepts entirely.
+
+% Categories of dimensionality reduction / feature screening / etc.
+The concept of dimensionality reduction can be divided in \textit{feature selection} and \textit{feature projection} \citep{cunningham2007dimension}. There exist an important difference. Whilst in the process of feature selection, relevant dimensions are sought and selected without altering their input values, in the process of feature projection (also called \textit{feature extraction}) data transformations are applied, mapping the original data onto a lower-dimensional space. Although the two the methods are different, the two aim to achieving the same goal, and are thus encountered in similar contexts. In this paper, the term \textit{feature selection} is used as a term to indicate the general process of obtaining a feature subset with reduced size without transforming the data - note that any feature selection method might transform the data in the algorithm however it likes internally - the stated terminology is only concerned with the eventual output of the feature selection algorithm.
+
+Common methods of feature projection are \textit{Principle Component Analysis} (PCA) for the supervised case and \textit{Linear Discriminant Analysis} (LDA) for the unsupervised case. Both PCA and LDA take a statistical approach to detecting feature interactions, which not always results in an optimal feature set for prediction. Rather, machine learning techniques can be used to select a more optimal subset.
+
+\subsection{Common approaches}
+% Categories of FS; filter/wrapper/embedded/hybrid ; supervised/unsupervised ; classification/regression ; feature types
+Methods can be roughly subdivided between filter-, wrapper- and embedded methods \citep{chandrashekar2014survey}, which lays out a common taxonomy within the field.
+
+\textbf{Filter methods} use some scoring mechanism to compute 'usefulness' for each feature, without applying a learning algorithm. Having applied some ranking criterion, often a feature ranking is produced, after which some thresholding operation can be applied to select features. Although filter methods are often computationally light and do not overfit due to the absence of a learning algorithm, filter methods might miss out on more complex feature interactions, causing a non-optimal subset as a result. Also, choosing a suitable threshold to use can be difficult.
+
+\textbf{Wrapper methods}, on the other hand, use some learning algorithm to determine a suitable subset of features. A search is conducted over the space of possible feature subsets, eventually selecting the subset that has the highest validation score in the test set using a chosen learner as a predictor. Characteristics that define wrapper methods lend themselves similar characteristics to traditional optimisation problems; although an exhaustive search might yield an optimal solution, such a solution might not always be feasible due to its great time complexity. For this reason, in some applications a liberal filter is applied first, before running a wrapper method.
+
+\textbf{Embedded methods}, lastly, seek to combine the training task and feature selection. Given some suitable learner, features are weighted during the training process, producing either a feature ranking or a feature subset afterwards. e.g. some learners compute feature importance scores as part of their training process, which can then be used in combination with some threshold to select relevant features. Having already trained the model, subsequent prediction tasks can benefit from increased prediction speed by using less data.
+
+% Hybrid methods. Talk about using feature importances to do sample re-weighting, and using ensembles of feature selectors (Bolon-canedo, 2018)
+
+\subsection{Types of features}
+An important consideration in choosing a suitable feature selection for any task, is what structure the concerning data has, if any at all. Data might exhibit tree, graph, or grouped structures, which is essential information when detecting feature interactions and determining useful features. Support for structured data is relatively new in the field, and has not been an extensive point of concern for many feature selection algorithms in the past. Many traditional feature selection algorithms focused primarily '\textit{conventional flat}' features \citep{li2017feature}, in which the assumption is made that the data is independent and identically distributed (\textit{i.i.d.}). This assumption is widespread among many machine learning algorithms, though, since in many applications datasets are normalized to fit the i.i.d. condition before they are used.
+
+Conventional data are opposed to more complex data structures, i.e. datasets with 'structured features', as coined by the proposed taxonomy from J. Li et al (2017) \cite{li2017feature}, but also to linked data and \textit{streaming data}. In streaming data, the quality of an initially selected feature subset can be improved as more data comes in, and a feature selection algorithm is able to benefit from a larger distribution of samples. Adapting existing feature selection algorithms to fit the demands of streaming data proved to be a non-trivial problem. Nowadays many companies and institutions have to deal with data volumes that easily exceed the boundaries of in-memory storage capacity - limiting the data scientist to train on only subsets of the entire datasets. Smart sampling is therefore needed to retain a representative sample distribution.
+
+The scope of this research is limited to only the most common type of features, \textbf{conventional-, flat features} (\textit{i.i.d.}).
+
+\subsection{Useful features}
+% what makes a feature useful?
+% relevant, redundant, irrelevant
+
+\subsection{Learning supervision}
+% supervised vs unsupervised FS
+
+\section{Evaluating performance}
+% even though many papers use 'widely used' methods, they might be non-optimal
+Evaluating the performance of feature selection algorithms is a non-trivial problem. Among a wide range of metrics, no consensus exists among researchers, leaving many papers to present outcomes in different ways \citep{guyon2003introduction}. Even though in absence of a single consistent evaluation pipeline across the field, many scholars adhere to methods that are 'widely used' \citep{solorio2020review} \citep{li2017feature}, there might be methods of evaluation that are more meaningful. % any widely adopted method can be sub-optimal.
+
+\subsection{State of affairs}
+Recommendations for metrics have been given in previous papers, most often when discussing future work. Arguments are made for relevant aspects to evaluate, such as in Chandrashekar (2013) \citep{chandrashekar2014survey}: \begin{quote}\textit{"a feature selection algorithm can be selected based on the following considerations: simplicity, stability, number of reduced features, classification accuracy, storage and computational requirements"}\end{quote}Of these aspects most proposals focus mainly on number of reduced features, classification accuracy and computational requirements. Let us explore what classifiers and corresponding metrics are used in papers across the field. Afterwards, evaluation aspects are covered that are not present in the aforementioned set.
+
+\textbf{Supervised feature selection} is most commonly evaluated by running some predictor over the concerning dataset using the selected feature subset, obtaining the easily interpretable accuracy metric in the classification case. Predictors often used in the literature include k-NN \citep{al2020review} \citep{mafarja2020dragonfly}, SVM's \citep{chandrashekar2014survey}, Decision Trees \citep{li2017feature} and Naïve Bayes \citep{koller1996toward}. Metrics used are often classification accuracy or in some cases average error rate \citep{khurma2020evolopy}, validated using some $n$-fold cross validation, commonly 5- or 10-fold.
+
+\textbf{Unsupervised feature selection} is often evaluated using a k-means predictor, as noted by Solorio-Fern$\acute{a}$ndez (2020) \citep{solorio2020review}, in which 68 papers were reviewed. Metrics include Clustering Accuracy (\textit{ACC}) and Normalized Mutual Information (\textit{NMI}). 
+
+\textbf{Stability}, on the other hand, is not widely used in theoretical or quantitative argumentation. Even though stability was recommended as a relevant evaluation metric by Chandrashekar (2013), not many papers explicitly argue for the stability of their method; the metric is called an \textit{"overlooked problem"} in Chandrashekar (2013). In many papers this metric is still regarded as a future work for solidifying any experimental results - the development of algorithms that achieve both high classification accuracy and high stability is still seen as a 'challenging' problem by Tang et al (2015) \citep{tang2014feature}.
+
+The trend seems to be turning though, with more authors becoming aware of the importance of stability. Our reliance on machine learning is ever-increasing, and so does the demand for interpretability and reliability of the algorithms. Take for example a bio-medical application, in which feature selection is used to select genes in a gene sequencing analysis. Any expert in this domain field will feel more confident if an algorithm produces stable results given a varying sample population. This is how we define stability: given small changes in the sample data, the output of a feature selection process ought to be stable, i.e. the sensitivity of the selector to data perturbations. This metric for measuring an ability to generalize to achieving consistency has been long taken into account into prediction tasks, but not in feature selection.
+
+\textbf{Scalability} is another point of attention that only recently caught more attention. The extra demand of algorithms to allow for parallel execution has been imminent as data grew tremendously large. Even, multi-core processing can lack in terms of performance, hence introducing the need for algorithms that can run in distributed fashion. Distributing a dataset over multiple machines poses challenges to some existing methods, though. Some current methods require the 'full dimensionality' of the dataset to be available in-memory \citep{tang2014feature}. Yet, other methods require each sample to be visited multiple times, e.g. to apply a sample re-weighting strategy in order to converge. For these reasons, dividing any dataset workload onto multiple workers is a non-trivial problem; no generalized solution exists for cutting the dataset into chunks.
+
+It is up to individual algorithms to find suitable ways of supporting parallel solutions and more importantly, support cases where data is too large to fit in-memory, i.e. apply distributed computing. Recent strategies overcome the issue of working with less samples by retaining only those samples that are most representative of the data - eliminating the need for working with a full sample population. Although few in numbers, there exist proposals for distributed dimensionality reduction methods \citep{JMLR:v21:19-537}, using 'divide-and-conquer' techniques. Aggregating disjoint results would make for a performance similar to that of a centralized solution.
+
+\subsection{Meaningful evaluation}\label{sec:evaluation}
+Let us revisit all theory that was before, and extract a sensible evaluation pipeline to use. First, each evaluation aspect is treated separately, followed by a recommendation, then an overview is drawn of the entire proposed evaluation pipeline.
+
+% review the paper that says "no single 'best' feature algorithm exists".
+
+\subsubsection{Simulations}\label{sec:evaluation-simulations}
+% we need a controlled environment
+Many proposals test their validity on real datasets. Although testing on real datasets might feel more intuitive since it is also the eventual domain of application, they may not prove the best fit for feature selection method evaluation. With any dataset for which we cannot exactly control its properties, we are resorted to a smaller available set of validation measures, such as classification accuracy. However, introducing synthetically generated probe variables, or even generating all benchmark data synthetically can provide more reliable results in a controlled environment.
+
+%... already pitched slightly by Guyon, e.g. "fake" variables.. + Solorio & Urbanowicz
+\textbf{Partially synthetic} datasets are spoken of in literature since long, using datasets that are real but altered by injecting more data. In \citep{guyon2003introduction} the authors speak of 'probe variables', which are used to discard any variable that scores lower than any of the probes. If the probe variables are set to be random variables, a simple way is obtained to apply a threshold to cutting off features from the selected feature subset, i.e. by introducing known noise into the dataset we can construct more thoughtful cut-off thresholds.
+
+\textbf{Completely synthetic} datasets, on the other hand, can allow for more sophisticated metrics to be used. Possibilities for new evaluation metrics are for example described in \citep{solorio2020review}: \textit{"Evaluation in terms of the redundancy of the selected features”} and \textit{“Evaluation in terms of the correctness of the selected features”}, the latter of which requires us to know what features are informative \textit{a priori} - which is accomplished with synthetic generation. Controlling all facets relevant to the quantitative analysis manually makes for a \textit{Simulation study}, which is argued for in \citep{urbanowicz2018benchmarking} as follows:
+
+%... then move to Urbanowicz with examples from JMLR papers
+\begin{quote}
+    \textit{"Simulation studies such as these facilitate proper evaluation and comparison of methodologies because a simulation study can be designed by systematically varying key experimental conditions, and the ground truth of the dataset is known i.e. we know which features are relevant vs. irrelevant, we know the pattern of association between relevant features and endpoint, and we know how much signal is in the dataset."}
+\end{quote}
+
+Indeed there seems to be a trend toward using synthetically generated datasets. In a review paper \citep{bolon2013review} the authors argue that synthetically generated datasets can yield statistically sound results because of the fact no inherent noise or redundancy will obstruct the experiment process.
+
+% explain what metrics we can now compute.
+\textbf{A priori} knowledge of relevant features allows us to evaluate feature selection results in a more meaningful manner. 
+% write how we could reward an algorithm for selecting useful features, penalise for selecting uninformative features, or running too long after having selected all useful ones.
+% maybe move this to 'statistical tools'
+Common classification metrics can be used, by computing the ratio of 'amount of selected relevant features versus the total amount of relevant features present in the dataset' or the ratio of 'selected relevant features versus the total amount of selected features', recall and precision respectively. Note the amount of 'true negatives' will be the amount of features that were not selected and are not informative - hence implicitly correctly identified as irrelevant. With those two measures now available, also the f-scores can be computed, as well as the true-positive-rates, false-positive-rates and therefore the ROC curve and AUC-scores. 
+
+Another benefit is gained by relying on a priori knowledge in the validation process, which is that the evaluation process is no longer dependent on the choice of the validation classifier. Removing the validation classifier from the evaluation process completely can make for a more universal way of evaluating feature selection methods: whilst previously reported feature selection method scorings were dependent on the validation classifier and would per definition not be comparable across papers, using a priori based metrics allows for better comparability across papers.
+
+In other, more recent papers simulation studies are conducted as well \citep{JMLR:v21:18-567} \citep{JMLR:v21:19-071} \citep{JMLR:v21:19-537}, concluded by a small section depicting a 'real data analysis' to conclude the point. For these reasons, we recommend use of simulation studies to evaluate feature selection methods.
+
+\subsubsection{Statistical tools}\label{sec:evaluation-statistical-tools}
+... we know the groundtruth; opening up possibilities for new metrics.
+% explain briefly how to compute tp/fp etc.
+% explain how to compute ROC curve (interpolated)
+
+% explain how to compute mAP (interpolated)
+\citep{everingham2010pascal} refers ->
+\citep{10.5555/576628}
+% area under the pr-curve
+\citep{boyd2013area}
+
+\subsubsection{Stability}\label{sec:evaluation-stability}
+Stability is an integral metric of any algorithm, for in many applications, only robust algorithms can be systematically relied on. A measure for quantifying stability that comes easily to mind might be the Hamming distance between multiple pairs of algorithm runs, i.e. ran on the same dataset with varied sample populations. Indeed, in \citep{dunne2002solutions} a measure based on Hamming distance is proposed. Reports also exist on numerous other approaches, like an entropy based measure \citep{kvrivzek2007improving}, a measure based on the cardinality of intersection measure \citep{kuncheva2007stability} and a measure based on correlation coefficients \citep{kalousis2007stability}.
+
+\textbf{Desired properties} of any measure are important to define in concrete manner. To compare the strength of any of these measures, the general objective for exactly what information we want to convey in a stability metric should be verbalized first. In \citep{mohana2016survey}, three desired stability metric properties are expressed: (1) \textit{Monotonicity}, (2) \textit{Limits} and (3) \textit{Correction for chance}. Given the proposed measures in the literature, only few measures satisfied all properties. In a more recent paper \citep{nogueira2017stability}, however, the authors extend the set of desired properties to include another two: (4) the stability estimator must be \textit{Fully defined} and (5) \textit{Maximum Stability $\leftrightarrow$ Deterministic Selection} - meaning that a maximum stability value should be achieved if-and-only-if all feature sets are exactly identical.
+
+\textbf{A novel measure} was proposed in \citep{nogueira2017stability}, using the set of newly proposed desired properties. Having explored a statistically sound method to define a metric satisfying all five properties, the authors proposed a novel stability estimator:
+
+% \citep{saeys2008towards}
+% \citep{Khaire et al, 2019}
+
+\begin{equation}\label{eq:stability-measure}
+\hat{\Phi}(\mathcal{Z})=1-\frac{\frac{1}{d} \sum_{f=1}^{d} s_{f}^{2}}{\mathbb{E}\left[\frac{1}{d} \sum_{f=1}^{d} s_{f}^{2} | H_{0}\right]}=1-\frac{\frac{1}{d} \sum_{f=1}^{d} s_{f}^{2}}{\frac{k}{d}\left(1-\frac{\bar{k}}{d}\right)}
+\end{equation}
+
+Here, $\hat{\Phi}$ resembles the stability estimate. It takes as an input $\mathcal{Z}$, which resembles a collection of feature sets chosen by the designated feature selection algorithm. We define $\mathcal{Z}$ as $\mathcal{Z} = \{s_1,...,s_M\}$, where $s_i$ is one feature subset of size $d$ features, with $d$ the amount of dimensions of the dataset and $M$ the amount of bootstrap samples - i.e. the amount of replicate datasets with equal probability distribution and dataset properties used to validate stability. Furthermore, the authors define $s_{f}^{2}$ as the unbiased sample variance of the selection of the $f^{t h}$ feature and $\bar{k}$ as the average number of features selected over the M feature sets. Given this paper's goal, there is no necessity for going into further mathematical details - for this we refer to the paper itself.
+
+What is is important, is that this new measure satisfies all desirable properties for quantifying stability, as was proven in the paper. Accompanying the novel definition, are instructions for computing confidence intervals and for performing a hypothesis testing for comparing various method stabilities. Exploring feature selection stability values given a set of parameter choices not only allows for choosing better hyperparameters, but also allows for comparing stabilities over various feature selection methods. Therefore, we recommend use of the metric defined in (\ref{eq:stability-measure}) to quantify feature selection method stability.
+
+\subsubsection{Statistical integrity}
+% post-hoc: wilcoxon, Friedman, etc.
+
+\subsubsection{Algorithm complexity}
+Other algorithm evaluation measures that ought to be taken into consideration are time complexity, storage complexity and algorithm simplicity.
+
+\subsubsection{Pipeline}
+% Summarize ALL proposed evaluation metrics, and how it would 'flow' through a pipeline
+
+% \section{Method}
+\section{Experiments}
+Using the newly defined set of metrics for evaluating feature selection methods, an empirical study was conducted. In compliance with the idea of doing a simulation study, synthetic datasets were used. In this study, 76 synthetically generated datasets from \citep{urbanowicz2018benchmarking} are used, for which each 24 replicas are considered. The synthetic datasets cover various factors of influence to the feature selection task, like missing data, noise levels, sample sizes, dataset dimensionality and the types of feature interactions. All datasets possess a ground truth accordingly, which is resembled by the informative features an algorithm should select.
+
+Testing was conducted on a selection of 4 supervised feature selection methods, using a mixed bag of methods that produce either a \textit{feature ranking} or a \textit{feature subset}. Other notable differences methods that exhibit \textit{stopping criteria} versus ones that do not, as well as forward- versus backward selection. The lineup is described as follows:
+
+\begin{itemize}
+    \item \textbf{ExtraTrees} \citep{geurts2006extremely}: ExtraTrees is a generic classifier used in a wide spectrum of applications, which works by creating an ensemble of (extremely) randomized trees. To use ExtraTrees as a feature selector, the feature importance scores are used to generate a ranking. This ranking is then reduced to a feature subset by cutting off features below the mean feature importance score, i.e. a threshold value defined as $\alpha = \frac{1}{p}\sum^{p}_{f=1}w_f$ and its feature subset as $\{f  \mid  w_f \geq \alpha\}$, where $p$ is the amount of features, $w_f$ is the $f^{th}$ feature importance score. 
+    
+    Configuration for ExtraTrees was set to use 50 estimators, all other settings were otherwise set at the scikit-learn \citep{pedregosa2011scikit} default. Since the feature importance scores are thresholded at the mean, the method produces not a ranking, but a \textbf{feature subset}.
+    
+    \item \textbf{FeatBoost} [undisclosed]: FeatBoost is a novel greedy forward feature selection algorithm proposed by Alsahaf et al in 2020, based on a sample re-weighting strategy. FeatBoost requires one to choose two estimators as hyperparameters: one estimator is used for the internal boosting process, and should expose feature importance scores, whilst another is used to validate some selected feature subset.
+    
+    Configuration was set such to explore 3 different hyperparameter settings: (1) First, a baseline configuration, referred to as simply '\textit{FeatBoost}'. FeatBoost using 'max features' set to 20 and the 'siso ranking size' set to 5 if amount of features $p \leq 100$ or set to 10 if amount of features $p > 100$. Furthermore, two XGBoost classifiers are used with 200 estimators and a max depth of 3. (2) Second, '\textit{FeatBoost w/1-NN}'. Same as the former, but with k-NN ($k = 1$) as a validation classifier. (3) Third, '\textit{FeatBoost Deep}'. Same as first, but both XGBoost classifiers having an increased maximum depth of 6. FeatBoost produces a \textbf{feature subset}.
+    
+    \item \textbf{MultiSURF} \citep{urbanowicz2018benchmarking} \citep{urbanowicz2018relief}: MultiSURF is related to the original Relief algorithm \citep{kira1992feature} and was first proposed in a benchmark paper for Relief-Based algorithms by Urbanowicz et al, in 2018. In the benchmark paper, amongst a selection of Relief-Based algorithms in a comprehensive, MultiSURF was recommended as an overall good performer.
+    
+    Configuration for MultiSURF was set such to rank the entire set of features, otherwise all other settings lay at default. Subsequently, the MultiSURF 'top features' attribute was used to produce a \textbf{feature ranking}.
+    
+    \item \textbf{Recursive Feature Elimination (RFE)} \citep{guyon2002gene}: In RFE, features with low feature importance scores are pruned away in step-wise manner, starting with the set of all features, i.e. using backward selection. The algorithm must be configured using an estimator exposing its feature importance scores, requesting new importance scores every step, iterating until a desired amount of features is selected.
+    
+    Configuration: RFE was configured using a XGBoost classifier configured exactly like in FeatBoost's configuration (1) and was set to eliminate features until the subset size is of length 1. Also, RFE was configured such, that in each 'elimination' round, 2 features are eliminated. Then, RFE's exposed ranking attribute is used to produce a \textbf{feature ranking}.
+\end{itemize}
+
+\subsection{One dataset}
+Although testing was conducted on many datasets, it is sensible to first explore effectiveness of various metrics given a tangible example.
+
+The dataset, '\textit{3-way Pure Epistasis}', records genetic information regarding Epistasis, which is a phenomenon in evolutionary biology describing how the mutations of one gene are dependent on other genes being mutated or not. In this case, 3-way interactions are considered - which also means that there exist 3 predictive features in the dataset. Another dataset property is 'heritability', which is a genetics term that in this context can be seen as the 'signal magnitude' \citep{urbanowicz2018benchmarking}. Heritability $h = 1$ resembles a clean dataset whilst $h = 0$ resembles complete noise. For '\textit{3-way Pure Epistasis}' the heritability value is $h = 0.4$. Furthermore, the dataset is of dimensionality $p = 20$ and $n = 1600$. Like all other datasets, the dataset contains 24 replicas all generated using the same properties but exhibiting a different sample population.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}lllllllllllllll@{}}
+\toprule
+Feature Rank  & 1  & 2  & 3  & 4 & 5  & 6  & 7 & 8 & 9  & 10 & 11 & 12 & 13 & 14 \\ \midrule
+Feature Index & \textbf{19} & 16 & 15 & 2 & \textbf{17} & 14 & 6 & 8 & 12 & \textbf{18} & 7  & 10 & 11 & 3  \\
+Informative?    & \textbf{Y}  & N  & N  & N & \textbf{Y}  & N  & N & N &  N & \textbf{Y}  & N & N & N  & N   \\ \bottomrule
+\end{tabular}
+\caption{Output for the ExtraTrees feature selector using a mean-importance score threshold, ran on the '3-way Pure Epistasis' dataset, replica 1. }
+\label{tab:3way-replica1}
+\end{table}
+
+Table~\ref{tab:3way-replica1} presents the \textbf{raw output} of 1 feature selection algorithm, ExtraTrees, given 1 replica. The algorithm constructed a subset with 14 features and managed to select all informative features, however, uninformative features were selected, too. Like argued in Section~\ref{sec:evaluation-statistical-tools}, there exist various ways to quantify performance. Let us explore several.
+%ways to quantify performance are to reward selecting useful features and penalise selecting useless ones. To express these measures, Recall and Precision curves can be useful.
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=0.49\textwidth]{img/3way_repl1pr.svg}
+\includesvg[width=0.49\textwidth]{img/3way_etpr.svg}
+\caption{Uninterpolated- and interpolated Precision and Recall metrics for '3-way Pure Epistasis' using ExtraTrees. \textbf{Left}: Both precision and recall plotted against feature ranking. Data for ExtraTrees, replica 1. \textbf{Right}: Interpolated Precision/Recall curve for ExtraTrees, all replicas.}
+\label{fig:3way_repl1pr_etpr}
+\end{figure}
+
+Figure~\ref{fig:3way_repl1pr_etpr} depicts data for the \textbf{Precision and Recall} metrics, for ExtraTrees. The left-hand plot depicts 1 replica and uses the data in Table~\ref{tab:3way-replica1} and the right-hand plot depicts all replicas. Whilst Recall rewards an algorithm for selecting informative features in monotonically increasing fashion, Precision both rewards and penalises. Whenever after a series of unsuccessful iterations, a useful feature was selected, precision jumps up - causing a 'wiggle' in the chart as theoretically explained in \ref{sec:evaluation-statistical-tools}. For this reason interpolation was applied as according to the proposed evaluation pipeline, as seen on the right plot. Also on the right plot are text annotations, indicating how many replicas support the mean-PR curve at various points, i.e. not all replicas manage to select all informative features. In scenarios as such, where only several of the replicas manage to select all informative features, the mAP scores is still a representative summary of all replicas: the mAP score is computed as the mean of all \textit{Average Precision} scores, not the Area Under the Curve - one way to think of it in this case is as a weighted AUC score.
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=0.49\textwidth]{img/3way_roc.svg}
+\includesvg[width=0.49\textwidth]{img/3way_pr.svg}
+\caption{All ranking methods depicted in both the ROC- and (interpolated) PR space, for the '3-way  Pure  Epistasis' dataset. Accordingly to the ROC- and PR curves, respectively the ROC-AUC and mAP scores are attached.}
+\label{fig:3way_rocpr}
+\end{figure}
+
+Figure~\ref{fig:3way_rocpr} depicts \textbf{ROC- and PR curves} for all ranking methods. Whilst in the PR space algorithms are penalised for selecting useless features, in the ROC space algorithms are only rewarded (monotonically increasing) for selecting the right features, as fast as possible: the false-positive-rate will increase when selecting uninformative features, with the true-positive-rate only increasing when selecting informative features. It can be observed that in this behavior, stopping criteria are not taken into account - which the PR curve does manage to do: whilst in the ROC space RFE is only moderately penalised for selecting many false positives before selecting true positives, RFE relatively scores considerably worse in the PR space. It should be noted, though, that the PR curves might be overly optimistic due to the interpolation applied: all curves start by default at the (0 recall, 1 precision) point. This can clarify the perfect scoring for MultiSURF in the mAP score but not the ROC-AUC score.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{img/3way_stab.png}
+\caption{Stability versus Maximum feature subset size, depicted for all ranking methods for the '3-way  Pure  Epistasis' dataset.}
+\label{fig:3way_stab}
+\end{figure}
+
+Figure~\ref{fig:3way_stab} depicts the \textbf{Stability} metric, as explained in Section~\ref{sec:evaluation-stability}. Since the metric requires feature subsets rather than feature rankings, feature rankings are cut off at various points of maximum subset sizes, $k$. In the figure, stabilities have been computed for cut off points $k \in [1, 10]$. It can be observed that only MultiSURF produced a reasonably stable subset, peaking out at 3 features - which is consistent with the amount of predictive features of 3. Raw data shows us that indeed MultiSURF produced a completely stable subset at a subset size of 3 - selecting all informative features in all replicas. Lower stability in smaller subset sizes are due to the algorithm selecting informative features in different \textit{order}, i.e. there exist no ranking preference amongst the informative features themselves.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.3\textwidth]{img/3way_cputime.png}
+\caption{.}
+\label{fig:3way_cputime}
+\end{figure}
+
+Figure~\ref{fig:3way_val} depicts classification accuracy scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps.
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/3way_val.svg}
+\caption{.}
+\label{fig:3way_val}
+\end{figure}
+
+
+\subsection{All datasets}
+
+% roc (auc), pr (map), stability, cputime
+
+\section{Results and discussion}
+\section{Conclusions and Future Work}
+
+\bibliographystyle{abbrv}
+\bibliography{literature}
+
+\end{document}
