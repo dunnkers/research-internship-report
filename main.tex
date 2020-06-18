@@ -287,23 +287,25 @@ Informative?    & \textbf{Y}  & N  & N  & N & \textbf{Y}  & N  & N & N &  N & \t
 
 \begin{figure}[ht]
 \centering
-\includesvg[width=0.7\textwidth]{img/3way_stab.svg}
+\includesvg[width=0.5\textwidth]{img/3way_stab.svg}
 \caption{Stability versus Maximum feature subset size, depicted for all ranking methods for the '3-way  Pure  Epistasis' dataset.}
 \label{fig:3way_stab}
 \end{figure}
 
 \autoref{fig:3way_stab} depicts the \textbf{Stability} metric, as explained in Section~\ref{sec:evaluation-stability}. Since the metric requires feature subsets rather than feature rankings, feature rankings are cut off at various points of maximum subset sizes, $k$. In the figure, stabilities have been computed for cut off points $k \in [1, 10]$. It can be observed that only MultiSURF produced a reasonably stable subset, peaking out at 3 features - which is consistent with the amount of predictive features of 3. Raw data shows us that indeed MultiSURF produced a completely stable subset at a subset size of 3 - selecting all informative features in all replicas. Lower stability in smaller subset sizes are due to the algorithm selecting informative features in different \textit{order}, i.e. there exist no ranking preference amongst the informative features themselves.
 
-\autoref{fig:3way_val} depicts \textbf{Classification Accuracy} scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps: the previously shown metrics should be able to show what feature selection methods constructed powerful feature subsets and should hence perform well in any subsequent prediction task. Three predictors are considered: \textit{k-NN} ($k = 1$), \textit{Gaussian Naïve Bayes} and \textit{XGBoost}, all ran at default hyperparameter values. It can be observed that methods that perform well are MultiSURF and FeatBoost Deep as a runner-up. What is important to note, is that for algorithms exhibiting stopping conditions, individual replicas may have stopped at varying subset sizes - causing an inconsistent distribution at the various subset size levels. i.e. if for some method 1 replica selected a larger subset than the other replicas - and this subset happens to score higher than the others - the accuracy scores are skewed to be \textit{overly optimistic} for that case.
-
 \begin{figure}[ht]
 \centering
-\includesvg[width=\textwidth]{img/3way_val.svg}
+\includesvg[width=0.8\textwidth]{img/3way_val.svg}
 \caption{Classification Accuracy versus Feature Subset size, for the '3-way  Pure  Epistasis' dataset. Each replica produced 5 measurements with 5-fold CV. Results were averaged over 24 replicas. Subsets were constructed by iteratively adding features of lower ranking scores for feature rankings, and similarly by adding features to a feature subset until its full size is reached.}
 \label{fig:3way_val}
 \end{figure}
 
-\textbf{To summarize} all observations, it seems mAP and ROC-AUC scores are not always able to foretell feature subset performance in a classification scenario. FeatBoost Deep is seen to perform reasonably well in the classification domain, ExtraTrees is scored higher in the evaluations, however. It is most probable that ExtraTrees suffered from increased noise due to selection of useless features - more so than FeatBoost Deep: 
+\autoref{fig:3way_val} depicts \textbf{Classification Accuracy} scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps: the previously shown metrics should be able to show what feature selection methods constructed powerful feature subsets and should hence perform well in any subsequent prediction task. Three predictors are considered: \textit{k-NN} ($k = 1$), \textit{Gaussian Naïve Bayes}, \textit{Support Vector Machine} (Linear) and \textit{XGBoost}, all ran at default hyperparameter values.
+
+It can be observed that methods that perform well are MultiSURF and FeatBoost Deep as a runner-up. What is important to note, is that for algorithms exhibiting stopping conditions, individual replicas may have stopped at varying subset sizes - causing an inconsistent distribution at the various subset size levels. i.e. if for some method 1 replica selected a larger subset than the other replicas - and this subset happens to score higher than the others - the accuracy scores are skewed to be \textit{overly optimistic} for that case.
+
+\textbf{To summarize} all observations, it seems mAP and ROC-AUC scores are not always able to foretell feature subset performance in a classification scenario. FeatBoost Deep is seen to perform better than ExtraTrees in the classification domain, even though ExtraTrees has more promising evaluation scores. 
 
 \subsection{All datasets}
 
