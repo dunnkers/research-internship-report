@@ -20,9 +20,8 @@
 
 \definecolor{lightblue}{rgb}{0.23, 0.45, 0.57}
 \usepackage[colorlinks=true,linkcolor=blue,allcolors=lightblue]{hyperref}
-% \usepackage[nameinlink]{cleveref} % make look of \cref emulate that of \autoref
-% \newtheorem{prop}{Proposition}
-% \crefname{prop}{Prop.}{Props.} % abbreviated labels
+\usepackage[toc,page]{appendix}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%-----------------------CUSTOM COMMANDS--------------------------%%
@@ -296,16 +295,16 @@ Informative?    & \textbf{Y}  & N  & N  & N & \textbf{Y}  & N  & N & N &  N & \t
 
 \begin{figure}[ht]
 \centering
-\includesvg[width=0.8\textwidth]{img/3way_val.svg}
+\includesvg[width=0.9\textwidth]{img/3way_val.svg}
 \caption{Classification Accuracy versus Feature Subset size, for the '3-way  Pure  Epistasis' dataset. Each replica produced 5 measurements with 5-fold CV. Results were averaged over 24 replicas. Subsets were constructed by iteratively adding features of lower ranking scores for feature rankings, and similarly by adding features to a feature subset until its full size is reached.}
 \label{fig:3way_val}
 \end{figure}
 
-\autoref{fig:3way_val} depicts \textbf{Classification Accuracy} scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps: the previously shown metrics should be able to show what feature selection methods constructed powerful feature subsets and should hence perform well in any subsequent prediction task. Three predictors are considered: \textit{k-NN} ($k = 1$), \textit{Gaussian Naïve Bayes}, \textit{Support Vector Machine} (Linear) and \textit{XGBoost}, all ran at default hyperparameter values.
+\autoref{fig:3way_val} depicts \textbf{Classification Accuracy} scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps: the previously shown metrics should be able to show what feature selection methods constructed powerful feature subsets and should hence perform well in any subsequent prediction task. Two predictors are considered: \textit{k-NN} ($k = 1$) and \textit{XGBoost}. See Appendix \textit{Gaussian Naïve Bayes}, \textit{Support Vector Machine} (Linear) and , All ran at default hyperparameter values.
 
-Careful interpretation of the plot is required, though: the process of aggregating the classification accuracy curve over various runs is open to similar graphical deceptions like the Precision/Recall curves. Possible distortions are rooted in various algorithm runs stopping at different subset sizes due to stopping criteria, giving outliers possibility to distort the mean classification accuracy value. Whilst for the P/R curves it is possible to resort to the mAP metric, in a classification accuracy lineplot the supporting 'weight' of the mean curve is not directly visible. Therefore, in \autoref{fig:3way_val}, a 'line width' dimension was added, resembling the replica support the mean curve has. A thicker curve means more replicas supporting the curve. It can be observed that MultiSURF performs well across all replicas - all replicas were instructed to rank all the features. For FeatBoost Deep, however, there exist outlier results with very little support - which is where, if simply the mean were taken, the mean curve would have been distorted. What According to what the earlier evaluation metrics were able to tell- the mAP and ROC-AUC scores represent feature selection method performance reasonably well.
+Careful interpretation of the plot is required: the process of aggregating the classification accuracy curve over various runs is open to graphical deceptions similar to what is seen in the Precision/Recall curves. Possible distortions are rooted in various algorithm runs stopping at different subset sizes due to stopping criteria, giving outliers possibility to distort the mean classification accuracy value. Whilst for the P/R curves it is possible to resort to the mAP metric, in a classification accuracy lineplot the supporting 'weight' of the mean curve is not directly visible. Therefore, in \autoref{fig:3way_val}, a 'line width' dimension was added, resembling the replica \textit{support} the mean curve has. A thicker curve means more replicas supporting the curve. It can be observed that MultiSURF performs well across all replicas - all replicas were instructed to rank all the features. For FeatBoost Deep, however, there exist outlier results with very little support - which is where, if simply the mean were taken, the mean curve would have been distorted. Curve support is weighted heavily, though, since according to the mAP and ROC-AUC scores, ExtraTrees evaluates higher, although in this validation stage it becomes clear that ExtraTrees does not perform so well - but it does so more consistently, i.e. with more curve support. ccording to what the earlier evaluation metrics were able to tell- the mAP and ROC-AUC scores represent feature selection method performance reasonably well.
 
-\textbf{To summarize} all observations, mAP and ROC-AUC scores are able to foretell feature subset performance in a classification scenario. FeatBoost Deep is seen to perform better than ExtraTrees in the classification domain, even though ExtraTrees has more promising evaluation scores. 
+\textbf{To summarize} all observations, mAP and ROC-AUC scores are able to foretell feature subset performance in a classification scenario. Much weight is put to the amount of replicas reaching their respective recall, precision or classification accuracy scores - which is in fact, sensible: an algorithm to perform well, but inconsistently, would have insufficient stability to be reliable and should thus score lower on feature selection evaluation metrics.
 
 \subsection{All datasets}
 
@@ -316,5 +315,10 @@ Careful interpretation of the plot is required, though: the process of aggregati
 
 \bibliographystyle{abbrv}
 \bibliography{literature}
+
+\begin{appendices}
+\chapter{Some Appendix}
+The contents...
+\end{appendices}
 
 \end{document}
