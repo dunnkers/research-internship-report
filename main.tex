@@ -18,6 +18,12 @@
 \usepackage{booktabs}
 \usepackage{svg}
 
+\definecolor{lightblue}{rgb}{0.23, 0.45, 0.57}
+\usepackage[colorlinks=true,linkcolor=blue,allcolors=lightblue]{hyperref}
+% \usepackage[nameinlink]{cleveref} % make look of \cref emulate that of \autoref
+% \newtheorem{prop}{Proposition}
+% \crefname{prop}{Prop.}{Props.} % abbreviated labels
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%-----------------------CUSTOM COMMANDS--------------------------%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -203,7 +209,7 @@ Stability is an integral metric of any algorithm, for in many applications, only
 
 Here, $\hat{\Phi}$ resembles the stability estimate. It takes as an input $\mathcal{Z}$, which resembles a collection of feature sets chosen by the designated feature selection algorithm. We define $\mathcal{Z}$ as $\mathcal{Z} = \{s_1,...,s_M\}$, where $s_i$ is one feature subset of size $d$ features, with $d$ the amount of dimensions of the dataset and $M$ the amount of bootstrap samples - i.e. the amount of replicate datasets with equal probability distribution and dataset properties used to validate stability. Furthermore, the authors define $s_{f}^{2}$ as the unbiased sample variance of the selection of the $f^{t h}$ feature and $\bar{k}$ as the average number of features selected over the M feature sets. Given this paper's goal, there is no necessity for going into further mathematical details - for this we refer to the paper itself.
 
-What is is important, is that this new measure satisfies all desirable properties for quantifying stability, as was proven in the paper. Accompanying the novel definition, are instructions for computing confidence intervals and for performing a hypothesis testing for comparing various method stabilities. Exploring feature selection stability values given a set of parameter choices not only allows for choosing better hyperparameters, but also allows for comparing stabilities over various feature selection methods. Therefore, we recommend use of the metric defined in (\ref{eq:stability-measure}) to quantify feature selection method stability.
+What is is important, is that this new measure satisfies all desirable properties for quantifying stability, as was proven in the paper. Accompanying the novel definition, are instructions for computing confidence intervals and for performing a hypothesis testing for comparing various method stabilities. Exploring feature selection stability values given a set of parameter choices not only allows for choosing better hyperparameters, but also allows for comparing stabilities over various feature selection methods. Therefore, we recommend use of the metric defined in (Eq~\ref{eq:stability-measure}) to quantify feature selection method stability.
 
 \subsubsection{Statistical integrity}
 % post-hoc: wilcoxon, Friedman, etc.
@@ -238,10 +244,10 @@ Testing was conducted on a selection of 4 supervised feature selection methods, 
     Configuration: RFE was configured using a XGBoost classifier configured exactly like in FeatBoost's configuration (1) and was set to eliminate features until the subset size is of length 1. Also, RFE was configured such, that in each 'elimination' round, 2 features are eliminated. Then, RFE's exposed ranking attribute is used to produce a \textbf{feature ranking}.
 \end{itemize}
 
-\subsection{One dataset}
-Although testing was conducted on many datasets, it is sensible to first explore effectiveness of various metrics given a tangible example.
+\subsection{3-way Pure Epistasis}
+Although testing was conducted on many datasets, it is sensible to first explore effectiveness of various metrics given a tangible example. The '\textit{3-way Pure Epistasis}' dataset was benchmarked at only 1 configuration, and hence lends itself well to a more thorough analysis. This first analysis is walked through in detail - once we established more trust in the chosen metrics, other datasets with more configurations can be analyzed en masse.
 
-The dataset, '\textit{3-way Pure Epistasis}', records genetic information regarding Epistasis, which is a phenomenon in evolutionary biology describing how the mutations of one gene are dependent on other genes being mutated or not. In this case, 3-way interactions are considered - which also means that there exist 3 predictive features in the dataset. Another dataset property is 'heritability', which is a genetics term that in this context can be seen as the 'signal magnitude' \citep{urbanowicz2018benchmarking}. Heritability $h = 1$ resembles a clean dataset whilst $h = 0$ resembles complete noise. For '\textit{3-way Pure Epistasis}' the heritability value is $h = 0.4$. Furthermore, the dataset is of dimensionality $p = 20$ and $n = 1600$. Like all other datasets, the dataset contains 24 replicas all generated using the same properties but exhibiting a different sample population.
+The 3-way Epistasis dataset records genetic information regarding Epistasis, which is a phenomenon in evolutionary biology describing how the mutations of one gene are dependent on other genes being mutated or not. In this case, 3-way interactions are considered - which also means that there exist 3 predictive features in the dataset. Another dataset property is 'heritability', which is a genetics term that in this context can be seen as the 'signal magnitude' \citep{urbanowicz2018benchmarking}. Heritability $h = 0$ resembles complete noise whilst a clean dataset is defined with $h = 1$, which in case the dataset is completely clean could theoretically lead to flawless predictions. For '\textit{3-way Pure Epistasis}' the heritability value is $h = 0.4$. Furthermore, the dataset is of dimensionality $p = 20$ and $n = 1600$. Like all other datasets, the dataset contains 24 replicas all generated using the same properties but exhibiting a different sample population.
 
 \begin{table}[ht]
 \centering
@@ -255,7 +261,7 @@ Informative?    & \textbf{Y}  & N  & N  & N & \textbf{Y}  & N  & N & N &  N & \t
 \label{tab:3way-replica1}
 \end{table}
 
-Table~\ref{tab:3way-replica1} presents the \textbf{raw output} of 1 feature selection algorithm, ExtraTrees, given 1 replica. The algorithm constructed a subset with 14 features and managed to select all informative features, however, uninformative features were selected, too. Like argued in Section~\ref{sec:evaluation-statistical-tools}, there exist various ways to quantify performance. Let us explore several.
+\autoref{tab:3way-replica1} presents the \textbf{raw output} of 1 feature selection algorithm, ExtraTrees, given 1 replica. The algorithm constructed a subset with 14 features and managed to select all informative features, however, uninformative features were selected, too. Like argued in Section~\ref{sec:evaluation-statistical-tools}, there exist various ways to quantify performance. Let us explore several.
 %ways to quantify performance are to reward selecting useful features and penalise selecting useless ones. To express these measures, Recall and Precision curves can be useful.
 
 \begin{figure}[ht]
@@ -266,7 +272,7 @@ Table~\ref{tab:3way-replica1} presents the \textbf{raw output} of 1 feature sele
 \label{fig:3way_repl1pr_etpr}
 \end{figure}
 
-Figure~\ref{fig:3way_repl1pr_etpr} depicts data for the \textbf{Precision and Recall} metrics, for ExtraTrees. The left-hand plot depicts 1 replica and uses the data in Table~\ref{tab:3way-replica1} and the right-hand plot depicts all replicas. Whilst Recall rewards an algorithm for selecting informative features in monotonically increasing fashion, Precision both rewards and penalises. Whenever after a series of unsuccessful iterations, a useful feature was selected, precision jumps up - causing a 'wiggle' in the chart as theoretically explained in \ref{sec:evaluation-statistical-tools}. For this reason interpolation was applied as according to the proposed evaluation pipeline, as seen on the right plot. Also on the right plot are text annotations, indicating how many replicas support the mean-PR curve at various points, i.e. not all replicas manage to select all informative features. In scenarios as such, where only several of the replicas manage to select all informative features, the mAP scores is still a representative summary of all replicas: the mAP score is computed as the mean of all \textit{Average Precision} scores, not the Area Under the Curve - one way to think of it in this case is as a weighted AUC score.
+\autoref{fig:3way_repl1pr_etpr} depicts data for the \textbf{Precision and Recall} metrics, for ExtraTrees. The left-hand plot depicts 1 replica and uses the data in \autoref{tab:3way-replica1} and the right-hand plot depicts all replicas. Whilst recall rewards an algorithm for selecting informative features in monotonically increasing fashion, precision both rewards and penalises. Whenever after a series of unsuccessful iterations, a useful feature was selected, precision jumps up - causing a 'wiggle' in the chart as theoretically explained in Section~\ref{sec:evaluation-statistical-tools}. For this reason interpolation was applied as according to the proposed evaluation pipeline, as seen on the right plot. Also on the right plot are text annotations, indicating how many replicas support the mean-PR curve at various points, i.e. not all replicas manage to select all informative features. In scenarios as such, where only several of the replicas manage to select all informative features, the mAP scores is still a representative summary of all replicas: the mAP score is computed as the mean of all \textit{Average Precision} scores, not the Area Under the Curve - one way to think of it in this case is as a weighted AUC score.
 
 \begin{figure}[ht]
 \centering
@@ -277,26 +283,27 @@ Figure~\ref{fig:3way_repl1pr_etpr} depicts data for the \textbf{Precision and Re
 \label{fig:3way_rocpr}
 \end{figure}
 
-Figure~\ref{fig:3way_rocpr} depicts \textbf{ROC- and PR curves} for all ranking methods. Whilst in the PR space algorithms are penalised for selecting useless features, in the ROC space algorithms are only rewarded (monotonically increasing) for selecting the right features, as fast as possible: the false-positive-rate will increase when selecting uninformative features, with the true-positive-rate only increasing when selecting informative features. It can be observed that in this behavior, stopping criteria are not taken into account - which the PR curve does manage to do: whilst in the ROC space RFE is only moderately penalised for selecting many false positives before selecting true positives, RFE relatively scores considerably worse in the PR space. It should be noted, though, that the PR curves might be overly optimistic due to the interpolation applied: all curves start by default at the (0 recall, 1 precision) point. This can clarify the perfect scoring for MultiSURF in the mAP score but not the ROC-AUC score.
+\autoref{fig:3way_rocpr} depicts \textbf{ROC- and PR curves} for all ranking methods. Whilst in the PR space algorithms are penalised for selecting useless features, in the ROC space algorithms are only rewarded (monotonically increasing) for selecting the right features, as fast as possible: the false-positive-rate will increase when selecting uninformative features, with the true-positive-rate only increasing when selecting informative features. It can be observed that in this behavior, stopping criteria are not taken into account - which the PR curve does manage to do: whilst in the ROC space RFE is only moderately penalised for selecting many false positives before selecting true positives, RFE relatively scores considerably worse in the PR space. It should be noted, though, that the PR curves might be overly optimistic due to the interpolation applied: all curves start by default at the (0 recall, 1 precision) point. This can clarify the perfect scoring for MultiSURF in the mAP score but not the ROC-AUC score.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.6\textwidth]{img/3way_stab.png}
+\includesvg[width=0.7\textwidth]{img/3way_stab.svg}
 \caption{Stability versus Maximum feature subset size, depicted for all ranking methods for the '3-way  Pure  Epistasis' dataset.}
 \label{fig:3way_stab}
 \end{figure}
 
-Figure~\ref{fig:3way_stab} depicts the \textbf{Stability} metric, as explained in Section~\ref{sec:evaluation-stability}. Since the metric requires feature subsets rather than feature rankings, feature rankings are cut off at various points of maximum subset sizes, $k$. In the figure, stabilities have been computed for cut off points $k \in [1, 10]$. It can be observed that only MultiSURF produced a reasonably stable subset, peaking out at 3 features - which is consistent with the amount of predictive features of 3. Raw data shows us that indeed MultiSURF produced a completely stable subset at a subset size of 3 - selecting all informative features in all replicas. Lower stability in smaller subset sizes are due to the algorithm selecting informative features in different \textit{order}, i.e. there exist no ranking preference amongst the informative features themselves.
+\autoref{fig:3way_stab} depicts the \textbf{Stability} metric, as explained in Section~\ref{sec:evaluation-stability}. Since the metric requires feature subsets rather than feature rankings, feature rankings are cut off at various points of maximum subset sizes, $k$. In the figure, stabilities have been computed for cut off points $k \in [1, 10]$. It can be observed that only MultiSURF produced a reasonably stable subset, peaking out at 3 features - which is consistent with the amount of predictive features of 3. Raw data shows us that indeed MultiSURF produced a completely stable subset at a subset size of 3 - selecting all informative features in all replicas. Lower stability in smaller subset sizes are due to the algorithm selecting informative features in different \textit{order}, i.e. there exist no ranking preference amongst the informative features themselves.
 
-Figure~\ref{fig:3way_val} depicts classification accuracy scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps.
+\autoref{fig:3way_val} depicts \textbf{Classification Accuracy} scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps: the previously shown metrics should be able to show what feature selection methods constructed powerful feature subsets and should hence perform well in any subsequent prediction task. Three predictors are considered: \textit{k-NN} ($k = 1$), \textit{Gaussian Naïve Bayes} and \textit{XGBoost}, all ran at default hyperparameter values. It can be observed that methods that perform well are MultiSURF and FeatBoost Deep as a runner-up. What is important to note, is that for algorithms exhibiting stopping conditions, individual replicas may have stopped at varying subset sizes - causing an inconsistent distribution at the various subset size levels. i.e. if for some method 1 replica selected a larger subset than the other replicas - and this subset happens to score higher than the others - the accuracy scores are skewed to be \textit{overly optimistic} for that case.
 
 \begin{figure}[ht]
 \centering
 \includesvg[width=\textwidth]{img/3way_val.svg}
-\caption{.}
+\caption{Classification Accuracy versus Feature Subset size, for the '3-way  Pure  Epistasis' dataset. Each replica produced 5 measurements with 5-fold CV. Results were averaged over 24 replicas. Subsets were constructed by iteratively adding features of lower ranking scores for feature rankings, and similarly by adding features to a feature subset until its full size is reached.}
 \label{fig:3way_val}
 \end{figure}
 
+\textbf{To summarize} all observations, it seems mAP and ROC-AUC scores are not always able to foretell feature subset performance in a classification scenario. FeatBoost Deep is seen to perform reasonably well in the classification domain, ExtraTrees is scored higher in the evaluations, however. It is most probable that ExtraTrees suffered from increased noise due to selection of useless features - more so than FeatBoost Deep: 
 
 \subsection{All datasets}
 
