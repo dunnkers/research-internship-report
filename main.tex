@@ -272,7 +272,7 @@ Figure~\ref{fig:3way_repl1pr_etpr} depicts data for the \textbf{Precision and Re
 \centering
 \includesvg[width=0.49\textwidth]{img/3way_roc.svg}
 \includesvg[width=0.49\textwidth]{img/3way_pr.svg}
-\includegraphics[width=0.49\textwidth]{img/3way_pr.svg}
+\includesvg[width=0.35\textwidth]{img/3way_AUC_mAP.svg}
 \caption{All ranking methods depicted in both the ROC- and (interpolated) PR space, for the '3-way  Pure  Epistasis' dataset. Accordingly to the ROC- and PR curves, respectively the ROC-AUC and mAP scores are attached.}
 \label{fig:3way_rocpr}
 \end{figure}
@@ -287,13 +287,6 @@ Figure~\ref{fig:3way_rocpr} depicts \textbf{ROC- and PR curves} for all ranking 
 \end{figure}
 
 Figure~\ref{fig:3way_stab} depicts the \textbf{Stability} metric, as explained in Section~\ref{sec:evaluation-stability}. Since the metric requires feature subsets rather than feature rankings, feature rankings are cut off at various points of maximum subset sizes, $k$. In the figure, stabilities have been computed for cut off points $k \in [1, 10]$. It can be observed that only MultiSURF produced a reasonably stable subset, peaking out at 3 features - which is consistent with the amount of predictive features of 3. Raw data shows us that indeed MultiSURF produced a completely stable subset at a subset size of 3 - selecting all informative features in all replicas. Lower stability in smaller subset sizes are due to the algorithm selecting informative features in different \textit{order}, i.e. there exist no ranking preference amongst the informative features themselves.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.3\textwidth]{img/3way_cputime.png}
-\caption{.}
-\label{fig:3way_cputime}
-\end{figure}
 
 Figure~\ref{fig:3way_val} depicts classification accuracy scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps.
 
