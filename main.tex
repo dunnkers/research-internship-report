@@ -418,6 +418,7 @@ Lastly, a dataset theme varying the total amount of dataset features whilst keep
 \label{fig:total_features}
 \end{figure}
 
+\subsubsection{CPU timings}
 \autoref{fig:cputime} depicts CPU timings for the Total Number of Features datasets, as well as aggregates for all other datasets. It can be observed that FeatBoost and MultiSURF scale somewhat \textit{linearly}, but RFE, like expected, \textit{exponentially} - since RFE is exhaustive it requires significantly more time when more features are added, having to elimate all features at all times. A curious result is the exceptionally long time MultiSURF took for computing the `135-bit multiplexer` dataset, taking the replicas 6.1 hours on average in comparison to just over 6 minutes for RFE. Since in the experiment all replicas ran on the same computation node, this might have been due to node malfunction. Another reason might be the high computational complexity that comes along with the 135-bit multiplexer - although there are 7 key features in this dataset, all 135 features are 'predictive'. Anyhow, the extra computational time MultiSURF had a positive impact in performance: for the 135-bit multiplexer MultiSURF scores highest with 0.99 AUC score, where other methods did significantly worse. In overall, ExtraTrees is by far the fastest - with all FeatBoost configurations as runner-ups. MultiSURF seems to take longer than FeatBoost on most configurations.
 
 \begin{figure}[ht]
@@ -434,7 +435,9 @@ Albeit many dataset themes were discussed, more were tested. To stay concise, no
 \subsection{Statistical integrity}
 Finally, after having empirically explored differences in feature selection algorithm performance, statistical tests can be performed to draw final conclusions. Like explained in Section~\ref{sec:evaluation-statistical-integrity}, the \textit{Wilcoxon signed ranks test} and the \textit{Friedman test} are sensible tests to use given the contexts, recommended for comparing 2 estimators or more, respectively. Given that in this research, no preference exists to proof one algorithm's performance over the other, a general comparison is made using the Friedman test. When significance is shown the data will be analyzed post-hoc using the \textit{Nemenyi post-hoc test}.
 
-Let the \textbf{Null Hypothesis} be: \textit{there is no significant difference in aggregated results between the 6 chosen feature selectors (groups) for 75 datasets (blocks)}. Given the various collected metrics, three such hypotheses can be set for: $ROC\-AUC$, $mAP$, $stability$. Note that aggregating metrics is done in the following way: for $ROC\-AUC$ and $mAP$, one score exist for every feature selection method per replica. For any feature selector, all replica scores are averaged. For the $stability$ metric, 
+Let the \textbf{Null Hypothesis} be: \textit{there is no significant difference in aggregated results between the 6 chosen feature selectors (groups) for 75 datasets (blocks)}. Given the various collected metrics, three such hypotheses can be set for: $ROC\-AUC$, $mAP$, $stability$.
+
+\textbf{Metric aggregation} is done in different ways given the various metrics: for $ROC\-AUC$ and $mAP$, one score exist for every feature selection method per replica. For any feature selector, all replica scores are \textit{averaged}. For the $stability$ metric, stability between replicas was measured for subset of various amounts of maximum length for each method, i.e. stability was measured for subset sizes with maximum length in the range $[1, 10]$. In this way, 10 stability scores per ranking method per dataset are obtained. The means of aggregating these scores, is to take the \textit{maximum} value in the range, i.e. for every ranking method, the peak value as in \autoref{fig:3way_stab} is taken. This method of aggregation seems sensible, since including the stability scores of early iterations would steer the score downward, since (correct) features can be selected in different order. This measure of aggregating by taking the maximum values, does not, however, take \textit{stopping} criteria into account. If all tested ranking methods would exhibit stopping criteria, instead of taking the maximum stability value, simply the stability of the selected subset could be taken, better resembling actual feature selection stability.
 
 % \begin{table}[h]
 % \begin{tabular}{@{}lll@{}}
@@ -447,7 +450,7 @@ Let the \textbf{Null Hypothesis} be: \textit{there is no significant difference 
 % \label{tab:test-statistics}
 % \end{table}
 
-\autoref{fig:significance-plots} depicts significance testing results. A Friedman test showed significant differences for all metrics, as visible by p-values of $< 0.05$. Because the null-hypothesis was therefore rejected for all metrics, a Nemenyi post-hoc test can be applied to find significance levels between groups. The Nemenyi post-hoc test showed that there exist multiple significant differences between groups. To allow for more meaningful interpretation, however, it can be useful to take the distributions of the metrics per feature selector into account.
+\autoref{fig:significance-plots} depicts \textbf{significance testing} results. A Friedman test showed significant differences for all metrics, as visible by p-values of $< 0.05$ in green colors. Because the null-hypothesis was therefore rejected for all metrics, a Nemenyi post-hoc test can be applied to find significance levels between groups. The Nemenyi post-hoc test showed that there exist multiple significant differences between groups. To allow for more meaningful interpretation, however, it can be useful to take the distributions of the metrics per feature selector into account.
 
 \begin{figure}[ht]
 \centering
@@ -458,12 +461,12 @@ Let the \textbf{Null Hypothesis} be: \textit{there is no significant difference 
 \label{fig:significance-plots}
 \end{figure}
 
-\autoref{fig:avg-metrics} depicts aggregated metrics for every tested feature selection algorithm. The metrics have been aggregated over all datasets to obtain a distribution plot, for which median values were drawn using black bars. Combining the insights of this chart with the significance plots, a couple observations can be made. (1) There exist strong significance that ExtraTrees, RFE and MultiSURF score higher in terms of AUC and maP (subset quality) than all FeatBoost variants. There exist no significance when comparing RFE, but the MultiSURF vs ExtraTrees comparison is significant, indicating MultiSURF superiority. (2) Between FeatBoost configurations, there exist a significant difference between FeatBoost Deep and FeatBoost w/1-NN, indicating FeatBoost Deep superiority when combined with the average metric scorings. (3) 
+\autoref{fig:avg-metrics} depicts \textbf{aggregated metrics} for every tested feature selection algorithm. The metrics have been aggregated over all datasets to obtain a distribution plot, for which median values were drawn using black bars. Combining the insights of this chart with the significance plots, a couple observations can be made. (1) There exist strong significance that ExtraTrees, RFE and MultiSURF score higher in terms of AUC and maP (subset quality) than all FeatBoost variants. There exist no significance when comparing RFE, but the MultiSURF vs ExtraTrees comparison is significant, indicating MultiSURF superiority. (2) Between FeatBoost configurations, there exist a significant difference between FeatBoost Deep and FeatBoost w/1-NN, indicating FeatBoost Deep superiority when combined with the average metric scorings. (3) In terms of stability, we again find similar significance levels, indicating better MultiSURF and RFE performance over FeatBoost variants, and better MultiSURF performance over ExtraTrees.
 
 \begin{figure}[ht]
 \centering
-\includesvg[width=\textwidth]{img/avg-metrics.svg}
-\caption{.}
+\includesvg[width=\textwidth]{img/agg-metrics.svg}
+\caption{Various aggregated metrics over all datasets, given all ranking methods. }
 \label{fig:avg-metrics}
 \end{figure}
 
