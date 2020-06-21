@@ -258,7 +258,7 @@ What is important, is that this new measure satisfies all desirable properties f
 \subsubsection{Algorithm complexity}
 Another metric to be taken into account is algorithm complexity, which manifests itself in three interlinked aspects: time-, storage- and algorithm simplicity. Like the classical principle \textit{Occam's razor} implies - there at all times exist a preference for simpler models over more complex ones, especially in the case both accomplish the same feat. So, an understandable model is preferred that performs limited computational steps in order to restrain time- and storage complexity from rising too high.
 
-Although measuring algorithm time- and storage requirements is relatively straightforward, more insightful would be a theoretical description of the complexities in Big O notation. Theoretical complexities are harder to obtain though - leaving many authors to resort solely to measurements. Nonetheless, complexity analysis is recommended to be part of any feature selection method comparison, for it is a critical aspect to consider.
+Although measuring algorithm time- and storage requirements does provide some understanding, more insightful would be a theoretical description of the complexities in Big O notation. Theoretical complexities are harder to obtain though - leaving many authors to resort solely to measurements. Nonetheless, complexity analysis is recommended to be part of any feature selection method comparison, for it is a critical aspect to consider.
 
 \subsubsection{Statistical integrity}
 Given the above discussed scalar metrics (mAP, ROC-AUC, Stability) for multiple feature selection methods computed for multiple datasets, a statistical test must be applied to provide convincing evidence for any algorithm's superiority. Like explained in \citep{demvsar2006statistical}, many papers make implicit hypotheses acclaiming improved performance over existing methods. Although chosen metrics might have been appropriate to statistically show performance gains as significant, results are less reliable when left unvalidated by a statistical test. Therefore, a statistical verification step is required in the feature selection evaluation process.
@@ -408,7 +408,7 @@ The XOR models are 'clean' datasets, which means the datasets are generated with
 \subsubsection{Total number of Features}
 Lastly, a dataset theme varying the total amount of dataset features whilst keeping other variables constant. Up until now all other datasets had a relatively small amount of features, which allowed us to answer questions about the types of complexity different feature selection algorithms can handle, but not exactly about \textit{scalability}.
 
-\autoref{fig:total_features} depicts ROC curves for Total Number of Features datasets. For most feature selectors, an increased number of features has a tremendous impact on the quality of the chosen subsets. Raw data reveals that given the high feature dataset ($p = 10000$), all FeatBoost variants have their performance significantly impacted by stopping early - after having constructed a subset of size 1 to around 7 - and not having selected correct features.
+\autoref{fig:total_features} depicts ROC curves for Total Number of Features datasets. For most feature selectors, an increased number of features has a tremendous impact on the quality of the chosen subsets. Raw data reveals that given the high feature dataset ($p = 10000$), all FeatBoost variants have their performance significantly impacted by both stopping early (subset sizes range from about 1 to 7) without having selected any correct features.
 
 \begin{figure}[ht]
 \centering
@@ -417,12 +417,12 @@ Lastly, a dataset theme varying the total amount of dataset features whilst keep
 \label{fig:total_features}
 \end{figure}
 
-\autoref{fig:cputime} depicts CPU timings for the Total Number of Features datasets, as well as aggregates for all other datasets.
+\autoref{fig:cputime} depicts CPU timings for the Total Number of Features datasets, as well as aggregates for all other datasets. It can be observed that FeatBoost and MultiSURF scale somewhat \textit{linearly}, but RFE, like expected, \textit{exponentially} - since RFE is exhaustive it requires significantly more time when more features are added, having to elimate all features at all times. A curious result is the exceptionally long time MultiSURF took for computing the `135-bit multiplexer` dataset, taking the replicas 6.1 hours on average in comparison to just over 6 minutes for RFE. Since in the experiment all replicas ran on the same computation node, this might have been due to node malfunction. Another reason might be the high computational complexity that comes along with the 135-bit multiplexer - although there are 7 key features in this dataset, all 135 features are 'predictive'. Anyhow, the extra computational time MultiSURF had a positive impact in performance: for the 135-bit multiplexer MultiSURF scores highest with 0.99 AUC score, where other methods did significantly worse. In overall, ExtraTrees is by far the fastest - with all FeatBoost configurations as runner-ups. MultiSURF seems to take longer than FeatBoost on most configurations.
 
 \begin{figure}[ht]
 \centering
-\includesvg[width=0.39\textwidth]{img/cputime_totalfeatures.svg}
-\includesvg[width=0.59\textwidth]{img/cputime_all_mean.svg}
+\includesvg[width=0.33\textwidth]{img/cputime_totalfeatures.svg}
+\includesvg[width=0.66\textwidth]{img/cputime_all_mean.svg}
 \caption{\textbf{Left}: CPU timings for Total Number of Features datasets, in a \textit{logarithmic} scale. The steepness of the line could reveal the scalability of the algorithm. \textbf{Right} raw CPU timings for many datasets, aggregated over all configurations and replicas.}
 \label{fig:cputime}
 \end{figure}
