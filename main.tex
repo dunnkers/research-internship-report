@@ -372,6 +372,7 @@ Because of the ambiguity of the replica curve support that exists in the PR curv
 In the '\textit{1 Main Effect}' dataset theme there exist a single informative feature, that should be relatively easy to detect in comparison to feature interactions.
 
 \autoref{fig:1_main_effect} depicts ROC curves for the given dataset theme. It can be observed that all algorithms perform decently well, except for \textit{FeatBoost 1-NN}, which seems to miss the informative feature in some cases.
+
 \begin{figure}[ht]
 \centering
 \includesvg[width=\textwidth]{img/1_main_effect.svg}
@@ -380,9 +381,37 @@ In the '\textit{1 Main Effect}' dataset theme there exist a single informative f
 \end{figure}
 
 \subsubsection{2-way Epistasis}
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/2way_n=200.svg}
+\caption{ROC curves for '\textit{2-way Epistasis}' dataset theme. 8 configurations of varying heritability and model difficulty levels were tested, with 4 different configurations of amount of samples. $n=200$, $n=400$, $n=800$, $n=1600$. See Appendix~\ref{sec:appendix-a}, \autoref{fig:2way_epi_large_samplesizes} for plots with $n=400$ and $n=1600$.}
+\label{fig:2way_epi}
+\end{figure}
+
 \subsubsection{Genetic Heterogeneity}
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/genetic_heterogeneity.svg}
+\caption{ROC curves for '\textit{Genetic Heterogeneity}' dataset theme. 2 configurations were tested, one with .}
+\label{fig:genetic_heterogeneity}
+\end{figure}
+
 \subsubsection{XOR benchmarks}
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/xor_benchmarks.svg}
+\caption{ROC curves for the '\textit{XOR Benchmarks}' dataset theme.}
+\label{fig:xor_benchmarks}
+\end{figure}
+
 \subsubsection{Total number of Features}
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/total_features.svg}
+\caption{ROC curves for the '\textit{Total Features}' dataset theme.}
+\label{fig:total_features}
+\end{figure}
+
 \subsubsection{Multiplexer benchmarks}
 \subsubsection{Data types}
 \subsection{Statistical integrity}
@@ -406,6 +435,14 @@ In the '\textit{1 Main Effect}' dataset theme there exist a single informative f
 \includesvg[width=0.9\textwidth]{img/3way_val_svmgnb.svg}
 \caption{Two more results accompanying the graphs in \autoref{fig:3way_val_knnxgb}: Classification Accuracy versus Feature Subset size, for the '3-way  Pure  Epistasis' dataset.}
 \label{fig:3way_val_svmgnb}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/2way_n=400.svg}
+\includesvg[width=\textwidth]{img/2way_n=1600.svg}
+\caption{ROC curves for '\textit{2-way Epistasis}' dataset theme, for larger sample sizes, accompanying \autoref{fig:2way_epi}.}
+\label{fig:2way_epi_large_samplesizes}
 \end{figure}
 \end{appendices}
 
