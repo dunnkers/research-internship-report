@@ -328,7 +328,7 @@ Informative?    & \textbf{Y}  & N  & N  & N & \textbf{Y}  & N  & N & N &  N & \t
 \centering
 \includesvg[width=0.49\textwidth]{img/3way_repl1pr.svg}
 \includesvg[width=0.49\textwidth]{img/3way_etpr.svg}
-\caption{Uninterpolated- and interpolated Precision and Recall metrics for '3-way Pure Epistasis' using ExtraTrees. \textbf{Left}: Both precision and recall plotted against feature ranking. Data for ExtraTrees, replica 1. \textbf{Right}: Interpolated Precision/Recall curve for ExtraTrees, all replicas.}
+\caption{\textbf{Left}: Both precision and recall plotted against feature ranking. Metrics are raw unterinpolated data, for ExtraTrees, replica 1. \textbf{Right}: Interpolated Precision/Recall curve for ExtraTrees, all replicas. \textbf{Both} display the '3-way Pure Epistasis' dataset, for the ExtraTrees feature selector. }
 \label{fig:3way_repl1pr_etpr}
 \end{figure}
 
@@ -337,8 +337,7 @@ Informative?    & \textbf{Y}  & N  & N  & N & \textbf{Y}  & N  & N & N &  N & \t
 \begin{figure}[ht]
 \centering
 \includesvg[width=0.49\textwidth]{img/3way_roc.svg}
-\includesvg[width=0.49\textwidth]{img/3way_pr.svg}
-\includesvg[width=0.35\textwidth]{img/3way_AUC_mAP.svg}
+\includegraphics[width=0.49\textwidth]{img/3way_pr.png}
 \caption{All ranking methods depicted in both the ROC- and (interpolated) PR space, for the '3-way  Pure  Epistasis' dataset. Accordingly to the ROC- and PR curves, respectively the ROC-AUC and mAP scores are attached.}
 \label{fig:3way_rocpr}
 \end{figure}
@@ -373,9 +372,9 @@ Careful interpretation of the plot is required: the process of aggregating the c
 
 \begin{figure}[ht]
 \centering
-\includesvg[width=\textwidth]{img/3way_val_knnxgb.svg}
-\caption{Classification Accuracy versus Feature Subset size, for the '3-way  Pure  Epistasis' dataset. Each replica produced 5 measurements with 5-fold CV. Results were averaged over 24 replicas, with the replicas partaking in the averaging process indicated by line width. Subsets were constructed by iteratively adding features of lower ranking scores for feature rankings, and similarly by adding features to a feature subset until its full size is reached.}
-\label{fig:3way_val_knnxgb}
+\includesvg[width=\textwidth]{img/1_main_effect.svg}
+\caption{.}
+\label{fig:1_main_effect}
 \end{figure}
 
 \subsubsection{2-way Epistasis}
