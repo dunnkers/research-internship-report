@@ -260,7 +260,7 @@ Another metric to be taken into account is algorithm complexity, which manifests
 
 Although measuring algorithm time- and storage requirements does provide some understanding, more insightful would be a theoretical description of the complexities in Big O notation. Theoretical complexities are harder to obtain though - leaving many authors to resort solely to measurements. Nonetheless, complexity analysis is recommended to be part of any feature selection method comparison, for it is a critical aspect to consider.
 
-\subsubsection{Statistical integrity}
+\subsubsection{Statistical integrity}\label{sec:evaluation-statistical-integrity}
 Given the above discussed scalar metrics (mAP, ROC-AUC, Stability) for multiple feature selection methods computed for multiple datasets, a statistical test must be applied to provide convincing evidence for any algorithm's superiority. Like explained in \citep{demvsar2006statistical}, many papers make implicit hypotheses acclaiming improved performance over existing methods. Although chosen metrics might have been appropriate to statistically show performance gains as significant, results are less reliable when left unvalidated by a statistical test. Therefore, a statistical verification step is required in the feature selection evaluation process.
 
 \textbf{Comparing multiple feature selectors} is a non-trivial problem, which can be seen as the problem of comparing multiple \textit{classifiers}. To compare multiple classifiers, \citep{demvsar2006statistical} recommends the Wilcoxon signed ranks test for comparison of two classifiers and the Friedman test for comparison of more classifiers given multiple datasets. Accompanying the Friedman test, it is recommended to perform corresponding post-hoc tests, such as the Nemenyi test \citep{nemenyi1963distribution}. The usually popular ANOVA test was advised against because, given the context of machine learning, ANOVA assumptions are violated, e.g. ANOVA assumes samples are drawn from normal distributions and the requirement of random variables having equal variance.
@@ -401,7 +401,7 @@ The XOR models are 'clean' datasets, which means the datasets are generated with
 \begin{figure}[ht]
 \centering
 \includesvg[width=\textwidth]{img/xor_benchmarks.svg}
-\caption{ROC curves for '\textit{XOR Benchmarks}'. For the theme there exist 4 different models, with 4 different amount of informative features ranging from 2 to 5, exploring algorithm performance under higher-order interactions.}
+\caption{ROC curves for '\textit{XOR Benchmarks}'. For the theme there exist 4 different models, with 4 different amount of informative features ranging from $p\_= 2$ to $p\_ = 5$, exploring algorithm performance under higher-order interactions.}
 \label{fig:xor_benchmarks}
 \end{figure}
 
@@ -431,15 +431,28 @@ Lastly, a dataset theme varying the total amount of dataset features whilst keep
 Albeit many dataset themes were discussed, more were tested. To stay concise, not all were included in the paper's main content. See Appendix~\ref{sec:appendix-a} for more results.
 
 \subsection{Statistical integrity}
-Finally, 
+Finally, after having empirically explored differences in feature selection algorithm performance, statistical tests can be performed to draw final conclusions. Like explained in Section~\ref{sec:evaluation-statistical-integrity}, the \textit{Wilcoxon signed ranks test} and the \textit{Friedman test} are sensible tests to use given the contexts, recommended for comparing 2 estimators or more, respectively. Given that in this research, no preference exists to proof one algorithm's performance over the other, a general comparison is made using the Friedman test. When significance is shown the data will be analyzed post-hoc using the \textit{Nemenyi post-hoc test}.
 
-% roc (auc), pr (map), stability, cputime
+Let the \textbf{Null Hypothesis} be: \textit{there is no significant difference in aggregated results between the 6 chosen feature selectors (groups) for 75 datasets (blocks)}. Given the various collected metrics, three such hypotheses can be set for: $ROC\-AUC$, $mAP$, $stability$.
+
+% \begin{table}[h]
+% \begin{tabular}{@{}lll@{}}
+% \toprule
+% Metric    & Test statistic & p-value    \\ \midrule
+% ROC-AUC   & 196.12         & 1.9211e-40 \\
+% mAP       & 206.88         & 9.5676e-43 \\
+% Stability & 43.17          & 3.4088e-08 \\ \bottomrule
+% \end{tabular}
+% \label{tab:test-statistics}
+% \end{table}
+
+\autoref{fig:significance-plots} depicts 
 
 \begin{figure}[ht]
 \centering
-\includesvg[width=0.32\textwidth]{img/roc-auc_significance.svg}
-\includesvg[width=0.32\textwidth]{img/mAP_significance.svg}
-\includesvg[width=0.32\textwidth]{img/stability_significance.svg}
+\includesvg[width=0.35\textwidth]{img/roc-auc_significance.svg}
+\includesvg[width=0.29\textwidth]{img/mAP_significance.svg}
+\includesvg[width=0.33\textwidth]{img/stability_significance.svg}
 \caption{.}
 \label{fig:significance-plots}
 \end{figure}
