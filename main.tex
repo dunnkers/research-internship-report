@@ -19,6 +19,7 @@
 \usepackage{natbib}
 \usepackage{booktabs}
 \usepackage{svg}
+\usepackage{siunitx}
 
 \definecolor{lightblue}{rgb}{0.23, 0.45, 0.57}
 \usepackage[colorlinks=true,linkcolor=blue,allcolors=lightblue]{hyperref}
@@ -433,7 +434,7 @@ Albeit many dataset themes were discussed, more were tested. To stay concise, no
 \subsection{Statistical integrity}
 Finally, after having empirically explored differences in feature selection algorithm performance, statistical tests can be performed to draw final conclusions. Like explained in Section~\ref{sec:evaluation-statistical-integrity}, the \textit{Wilcoxon signed ranks test} and the \textit{Friedman test} are sensible tests to use given the contexts, recommended for comparing 2 estimators or more, respectively. Given that in this research, no preference exists to proof one algorithm's performance over the other, a general comparison is made using the Friedman test. When significance is shown the data will be analyzed post-hoc using the \textit{Nemenyi post-hoc test}.
 
-Let the \textbf{Null Hypothesis} be: \textit{there is no significant difference in aggregated results between the 6 chosen feature selectors (groups) for 75 datasets (blocks)}. Given the various collected metrics, three such hypotheses can be set for: $ROC\-AUC$, $mAP$, $stability$.
+Let the \textbf{Null Hypothesis} be: \textit{there is no significant difference in aggregated results between the 6 chosen feature selectors (groups) for 75 datasets (blocks)}. Given the various collected metrics, three such hypotheses can be set for: $ROC\-AUC$, $mAP$, $stability$. Note that aggregating metrics is done in the following way: for $ROC\-AUC$ and $mAP$, one score exist for every feature selection method per replica. For any feature selector, all replica scores are averaged. For the $stability$ metric, 
 
 % \begin{table}[h]
 % \begin{tabular}{@{}lll@{}}
@@ -446,16 +447,18 @@ Let the \textbf{Null Hypothesis} be: \textit{there is no significant difference 
 % \label{tab:test-statistics}
 % \end{table}
 
-\autoref{fig:significance-plots} depicts 
+\autoref{fig:significance-plots} depicts significance testing results. A Friedman test showed significant differences for all metrics, as visible by p-values of $< 0.05$. Because the null-hypothesis was therefore rejected for all metrics, a Nemenyi post-hoc test can be applied to find significance levels between groups. The Nemenyi post-hoc test showed that there exist multiple significant differences between groups. To allow for more meaningful interpretation, however, it can be useful to take the distributions of the metrics per feature selector into account.
 
 \begin{figure}[ht]
 \centering
 \includesvg[width=0.35\textwidth]{img/roc-auc_significance.svg}
 \includesvg[width=0.29\textwidth]{img/mAP_significance.svg}
 \includesvg[width=0.33\textwidth]{img/stability_significance.svg}
-\caption{.}
+\caption{Significance plots for $ROC\-AUC$, $mAP$ and $Stability$ metrics, resulting in Friedman-test p-values of respectively \num{1.92e-40}, \num{9.57e-43} and \num{3.41e-08}. The heatmap displays results for a Nemenyi post-hoc analysis: red shows no significance, darker green is more significant.}
 \label{fig:significance-plots}
 \end{figure}
+
+\autoref{fig:avg-metrics} depicts aggregated metrics for every tested feature selection algorithm. The metrics have been aggregated over all datasets to obtain a distribution plot, for which median values were drawn using black bars. Combining the insights of this chart with the significance plots, a couple observations can be made. (1) There exist strong significance that ExtraTrees, RFE and MultiSURF score higher in terms of AUC and maP (subset quality) than all FeatBoost variants. There exist no significance when comparing RFE, but the MultiSURF vs ExtraTrees comparison is significant, indicating MultiSURF superiority. (2) Between FeatBoost configurations, there exist a significant difference between FeatBoost Deep and FeatBoost w/1-NN, indicating FeatBoost Deep superiority when combined with the average metric scorings. (3) 
 
 \begin{figure}[ht]
 \centering
