@@ -362,11 +362,11 @@ Informative?    & \textbf{Y}  & N  & N  & N & \textbf{Y}  & N  & N & N &  N & \t
 
 \autoref{fig:3way_val_knnxgb} depicts \textbf{Classification Accuracy} scores for all ranking methods. The charts should not function as a general performance measure, like argued in Section~\ref{sec:evaluation}, the charts are included, however, to convince the reader of the evaluation correctness of the previous steps: the previously shown metrics should be able to show what feature selection methods constructed powerful feature subsets and should hence perform well in any subsequent prediction task. Two predictors are considered: \textit{k-NN} ($k = 1$) and \textit{XGBoost}. For results of \textit{Gaussian Naïve Bayes} and  a (linear) \textit{Support Vector Machine}, see Appendix~\ref{sec:appendix-a}, \autoref{fig:3way_val_svmgnb}. All ran at default hyperparameter values.
 
-Careful interpretation of the plot is required: the process of aggregating the classification accuracy curve over various runs is open to graphical deceptions similar to what is seen in the Precision/Recall curves. Possible distortions are rooted in various algorithm runs stopping at different subset sizes due to stopping criteria, giving outliers possibility to distort the mean classification accuracy value. Whilst for the P/R curves it is possible to resort to the mAP metric, in a classification accuracy lineplot the supporting 'weight' of the mean curve is not directly visible. Therefore, in \autoref{fig:3way_val_knnxgb}, a 'line width' dimension was added, resembling the replica \textit{support} the mean curve has. A thicker curve means more replicas supporting the curve. It can be observed that MultiSURF performs well across all replicas - all replicas were instructed to rank all the features. For FeatBoost Deep, however, there exist outlier results with very little support - which is where, if simply the mean were taken, the mean curve would have been distorted. Curve support is weighted heavily, though, since according to the mAP and ROC-AUC scores, ExtraTrees evaluates higher, although in this validation stage it becomes clear that ExtraTrees does not perform so well - but it does so more consistently, i.e. with more curve support. According to what the earlier evaluation metrics were able to tell- the mAP and ROC-AUC scores represent feature selection method performance reasonably well.
+Careful interpretation of the plot (\autoref{fig:3way_val_knnxgb}) is required: the process of aggregating the classification accuracy curve over various runs is open to graphical deceptions similar to what is seen in the Precision/Recall curves. Possible distortions are rooted in various algorithm runs stopping at different subset sizes due to stopping criteria, giving outliers possibility to distort the mean classification accuracy value. Whilst for the P/R curves it is possible to resort to the mAP metric, in a classification accuracy lineplot the supporting 'weight' of the mean curve is not directly visible. Therefore, in \autoref{fig:3way_val_knnxgb}, a 'line width' dimension was added, resembling the replica \textit{support} the mean curve has. A thicker curve means more replicas supporting the curve. It can be observed that MultiSURF performs well across all replicas - all replicas were instructed to rank all the features. For FeatBoost Deep, however, there exist outlier results with very little support - which is where, if simply the mean were taken, the mean curve would have been distorted. Curve support is weighted heavily, though, since according to the mAP and ROC-AUC scores, ExtraTrees evaluates higher, although in this validation stage it becomes clear that ExtraTrees does not perform so well - but it does so more consistently, i.e. with more curve support. According to what the earlier evaluation metrics were able to tell- the mAP and ROC-AUC scores represent feature selection method performance reasonably well.
 
 \textbf{To summarize} all observations, mAP and ROC-AUC scores are able to foretell feature subset performance in a classification scenario. Much weight is put to the amount of replicas reaching their respective recall, precision or classification accuracy scores - which is in fact, sensible: an algorithm to perform well, but inconsistently, would have insufficient stability to be reliable and should thus score lower on feature selection evaluation metrics. In order to analyze other dataset themes \textit{en masse}, a representative choice has to be made between the various metrics, initiating the need to answer an important question: which plot best resembles feature selection algorithm performance?
 
-Because of the ambiguity of the replica curve support that exists in the PR curves, in the further evaluations of other datasets solely ROC curves will be used. Even though this ambiguity has been tried to made visible, for example by means of text labels in \autoref{fig:3way_repl1pr_etpr} or by means of curve thickness in \autoref{fig:3way_rocpr}, still the lines do not faithfully represent the actual (consistent) performance and might therefore be misleading. It must be noted that the ROC curve might be overly-optimistic w.r.t. algorithms that have no stopping criteria - this can, however, be compensated by including the $mAP$ metric in a later analysis stage. The $mAP$ scores do faithfully represent performance over all replicas and will later be used in the statistical integrity testing section. For the reasons above, in the remainder of analysis ROC curves will be used.
+Because of the ambiguity of the replica curve support that exists in the PR curves, in the further evaluations of other datasets solely ROC curves will be used. Even though this ambiguity has been tried to made visible, for example by means of text labels in \autoref{fig:3way_repl1pr_etpr} or by means of curve thickness in \autoref{fig:3way_rocpr}, still the lines do not faithfully represent the actual (consistent) performance and might therefore be misleading. It must be noted that the ROC curve might be overly-optimistic w.r.t. algorithms that have no stopping criteria - this can, however, be compensated by including the $mAP$ metric in a later analysis stage. The $mAP$ scores do faithfully represent performance over all replicas and will later be used in the statistical integrity testing section. Note that another solution would be to normalize replica subset sizes to be of equal length, e.g. by cutting off at a certain threshold or fixed length, or, to instruct feature selection algorithms to select a specific number of features - see Future work, Section~\ref{sec:future-work}. That said, due to the reasons above, in the remainder of analysis ROC curves will be used.
 
 \subsubsection{Main Effects}
 In the '\textit{1 Main Effect}' dataset theme there exist a single informative feature, that should be relatively easy to detect in comparison to feature interactions.
@@ -381,6 +381,10 @@ In the '\textit{1 Main Effect}' dataset theme there exist a single informative f
 \end{figure}
 
 \subsubsection{2-way Epistasis}
+The '\textit{2-way Epistasis}' dataset represent 2-way feature interactions and are hence more difficult than the a 1 main effect.
+
+\autoref{fig:2way_epi} depicts ROC curves for 2-way epistasis. Immediately visible is the worsened performance in the 2-way interactions in comparison to 1 main effect. All algorithms seem to have difficulties with the hard models, although the FeatBoost algorithm configurations have most difficulty with high-noise (low heritability), hard models.
+
 \begin{figure}[ht]
 \centering
 \includesvg[width=\textwidth]{img/2way_n=200.svg}
@@ -388,23 +392,24 @@ In the '\textit{1 Main Effect}' dataset theme there exist a single informative f
 \label{fig:2way_epi}
 \end{figure}
 
-\subsubsection{Genetic Heterogeneity}
-\begin{figure}[ht]
-\centering
-\includesvg[width=\textwidth]{img/genetic_heterogeneity.svg}
-\caption{ROC curves for '\textit{Genetic Heterogeneity}' dataset theme. 2 configurations were tested, one with .}
-\label{fig:genetic_heterogeneity}
-\end{figure}
 
 \subsubsection{XOR benchmarks}
+The XOR models are 'clean' datasets, which means the datasets are generated without any noise using a heritability parameter of ($h = 1.0$). The models include from 2 up to 5 informative features, influencing the difficulty of detecting the interactions.
+
+\autoref{fig:xor_benchmarks} depicts ROC curves for XOR benchmark models. An interesting observation is that MultiSURF performance, which has previously been very steady, plummets quickly when the amount of feature interactions is increased. Although its AUC is still higher than the FeatBoost methods, it comes at a large false-positive-rate. ExtraTrees performance ranks highest for the high amount of feature interactions ($p_ = 5$), which might imply that ExtraTrees is better able to detect more complicated feature interactions. 
+
 \begin{figure}[ht]
 \centering
 \includesvg[width=\textwidth]{img/xor_benchmarks.svg}
-\caption{ROC curves for the '\textit{XOR Benchmarks}' dataset theme.}
+\caption{ROC curves for '\textit{XOR Benchmarks}'. For the theme there exist 4 different models, with 4 different amount of informative features ranging from 2 to 5, exploring algorithm performance under higher-order interactions.}
 \label{fig:xor_benchmarks}
 \end{figure}
 
 \subsubsection{Total number of Features}
+Lastly, a dataset theme varying the total amount of dataset features whilst keeping other variables constant. Up until now all other datasets had a relatively small amount of features, which allowed us to answer questions about the types of complexity different feature selection algorithms can handle, but not exactly about \textit{scalability}.
+
+\autoref{fig:total_features} depicts ROC curves for Total Number of Features datasets. For most feature selectors, an increased number of features has a tremendous impact on the quality of the chosen subsets. Raw data reveals that given the high feature dataset ($p = 10000$), all FeatBoost variants have their performance significantly impacted by stopping early - after having constructed a subset of size 1 to around 7 - and not having selected correct features.
+
 \begin{figure}[ht]
 \centering
 \includesvg[width=\textwidth]{img/total_features.svg}
@@ -412,23 +417,35 @@ In the '\textit{1 Main Effect}' dataset theme there exist a single informative f
 \label{fig:total_features}
 \end{figure}
 
-\subsubsection{Multiplexer benchmarks}
-\subsubsection{Data types}
+\autoref{fig:cputime} depicts CPU timings for the Total Number of Features datasets, as well as aggregates for all other datasets.
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=0.49\textwidth]{img/cputime_totalfeatures.svg}
+\includesvg[width=0.49\textwidth]{img/cputime_all_mean.svg}
+\caption{\textbf{Left}: CPU timings for Total Number of Features datasets, in a \textit{logarithmic} scale. The steepness of the line could reveal the scalability of the algorithm. \textbf{Right} raw CPU timings for many datasets, aggregated over all configurations and replicas.}
+\label{fig:cputime}
+\end{figure}
+
+\subsubsection{Concluding dataset themes}
+Albeit many dataset themes were discussed, more were tested. To stay concise, not all were included in the paper's main content. See Appendix~\ref{sec:appendix-a} for more results.
+
 \subsection{Statistical integrity}
 
 % roc (auc), pr (map), stability, cputime
 
 \section{Conclusions and Future Work}
 \subsection{Conclusion}
-\subsection{Future Work}
+\subsection{Future Work}\label{sec:future-work}
 % missing is storage complexity analysis, scalability analysis, simplicity analysis.
 % study could be more consistent with including only forward- fs methods
 
+\clearpage
 \bibliographystyle{abbrv}
 \bibliography{literature}
 
 \begin{appendices}
-\section{Additional figures}\label{sec:appendix-a}
+\section{Additional results}\label{sec:appendix-a}
 
 \begin{figure}[ht]
 \centering
@@ -444,6 +461,35 @@ In the '\textit{1 Main Effect}' dataset theme there exist a single informative f
 \caption{ROC curves for '\textit{2-way Epistasis}' dataset theme, for larger sample sizes, accompanying \autoref{fig:2way_epi}.}
 \label{fig:2way_epi_large_samplesizes}
 \end{figure}
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/multiplexer_benchmarks.svg}
+\caption{ROC curves for the '\textit{Multiplexer}' dataset theme.}
+\label{fig:multiplexer_benchmarks}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/data_types.svg}
+\caption{ROC curves for the '\textit{Data Types}' dataset theme.}
+\label{fig:data_types}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/genetic_heterogeneity.svg}
+\caption{ROC curves for '\textit{Genetic Heterogeneity}' dataset theme. 2 configurations were tested.}
+\label{fig:genetic_heterogeneity}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includesvg[width=\textwidth]{img/additive_main_effects.svg}
+\caption{ROC curves for '\textit{Additive Main Effects}' dataset theme.}
+\label{fig:additive_main_effects}
+\end{figure}
+
 \end{appendices}
 
 \end{document}
